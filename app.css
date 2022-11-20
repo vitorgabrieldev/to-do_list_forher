@@ -64,6 +64,10 @@ body {
     transition: .3s;
 }
 
+#newtask button:hover {
+    background: #4caf50;
+}
+
 #tasks {
     background: #fefefe;
     padding: 30px 20px;
@@ -103,6 +107,11 @@ body {
     border: none;
     cursor: pointer;
     outline: none;
+    transition: .3s;
+}
+
+.task button:hover {
+    background: #f44336;
 }
 
 .task button i {

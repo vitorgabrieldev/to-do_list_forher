@@ -3,22 +3,30 @@
 
     <title>To-do List</title>
 
+    <!-- --- * --- Favicon --- * --- -->
+    <link rel="shortcut icon" href="./assents/media/image/favicon.ico" type="image/x-icon">
+
+    <!-- --- * --- Require Meta Tags --- * --- -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Boxicons CSS -->
+    <!-- --- * --- Boxicons CSS --- * --- -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+    <!-- --- * --- Style Sheets --- * --- -->
     <link rel="stylesheet" href="./app.css">
 
 </head>
 <body>
+    <!-- --- * --- Components --- * --- -->
     <div class="container">
         <div id="newtask">
-            <input type="text" placeholder="Task to be done...">
+            <input type="text" placeholder="Books, movies, anime...">
+            <!-- --- * --- Event Call Button That Adds To List --- * --- -->
             <button onclick="addTask()" id="push">add</button>
         </div>
+        <!-- --- * --- Container Tasks --- * --- -->
         <div id="tasks"></div>
     </div>
 
