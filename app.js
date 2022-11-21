@@ -82,3 +82,7 @@ function deleteAllChlid() {
 
     document.querySelector('#tasks').style.display = "none";
 };
+
+
+// --- * --- configs_tasks --- * ---
+let configs_tasks = document.querySelector('#configs_tasks');
