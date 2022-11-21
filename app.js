@@ -11,7 +11,6 @@ window.addEventListener('keypress', (e) => {
         };
     };
 });
-
 document.querySelector("#push").addEventListener('click', () => {
     if(token_child < 50) {
         addTask();
@@ -53,6 +52,10 @@ function addTask() {
                 token_child--;
                 let countsItens = document.querySelector('#qtdItems');
                 countsItens.innerHTML = `${token_child}/50`;
+
+                if(token_child < 1) {
+                    document.querySelector('#tasks').style.display = "none";
+                };
             };
         };
         // var tasks = document.querySelectorAll(".task");
@@ -61,6 +64,21 @@ function addTask() {
         //         this.classList.toggle('completed');
         //     };
         // };
+
         document.querySelector('#newtask input').value = "";
     };
+};
+
+function deleteAllChlid() {
+    var current_tasks = document.querySelectorAll(".task");
+    current_tasks.forEach(element => {
+        element.parentElement.removeChild(element);
+    });
+
+    // --- * ---  update Counts Itens --- * ---
+    token_child = 0;
+    let countsItens = document.querySelector('#qtdItems');
+    countsItens.innerHTML = `${token_child}/50`;
+
+    document.querySelector('#tasks').style.display = "none";
 };

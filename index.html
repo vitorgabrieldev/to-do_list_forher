@@ -22,12 +22,16 @@
     <!-- --- * --- Components --- * --- -->
     <div class="container">
         <div id="newtask">
-            <input type="text" placeholder="Books, movies, anime...">
+            <input spellcheck="false" maxlength="30" type="text" placeholder="Books, movies, anime...">
             <!-- --- * --- Event Call Button That Adds To List --- * --- -->
             <button id="push">add</button>
             <div class="container_functions">
                 <div class="info_list">
                     <h1 id="qtdItems">0/50</h1>
+                </div>
+                <div onclick="deleteAllChlid()" class="content_functions">
+                    All
+                    <i class='bx bxs-trash'></i>
                 </div>
             </div>
         </div>
