@@ -1,18 +1,30 @@
+// --- * ---  Tokens --- * ---
+var token_child = 0;
+
 window.addEventListener('keypress', (e) => {
     if(e.key === 'Enter') {
-        addTask();
+        if(token_child < 50) {
+            addTask();
+        } else {
+            document.querySelector('#newtask input').value = "";
+            alert('Maximum items added');
+        };
     };
 });
 
-// --- * ---  Tokens --- * ---
-// var token_removeChild = 0;
+document.querySelector("#push").addEventListener('click', () => {
+    if(token_child < 50) {
+        addTask();
+    } else {
+        document.querySelector('#newtask input').value = "";
+        alert('Maximum items added');
+    };
+});
 
 function addTask() {
     if(document.querySelector('#newtask input').value.length === 0) {
         alert("Please Enter a Task");
     } else {
-
-
         document.querySelector('#tasks').innerHTML += `
             <div class="task">
                 <span id="taskname">
@@ -23,24 +35,32 @@ function addTask() {
                 </button>
             </div> 
         `;
-        
-    // --- * --- delete Function --- * ---
-    var current_tasks = document.querySelectorAll(".delete");
-    document.querySelector('#tasks').style.display = "block";
-    for(var i = 0; i < current_tasks.length; i++) {
-        current_tasks[i].onclick = function() {
-            this.parentNode.remove();
+
+        token_child++;
+
+        // --- * ---  update Counts Itens --- * ---
+        let countsItens = document.querySelector('#qtdItems');
+        countsItens.innerHTML = `${token_child}/50`;
+
+        // --- * --- delete Function --- * ---
+        var current_tasks = document.querySelectorAll(".delete");
+        document.querySelector('#tasks').style.display = "block";
+        for(var i = 0; i < current_tasks.length; i++) {
+            current_tasks[i].onclick = function() {
+                this.parentNode.remove();
+
+                // --- * ---  update Counts Itens --- * ---
+                token_child--;
+                let countsItens = document.querySelector('#qtdItems');
+                countsItens.innerHTML = `${token_child}/50`;
+            };
         };
-    };
-
-    var tasks = document.querySelectorAll(".task");
-    for(var i = 0;i < tasks; i++) {
-        tasks[i].onclick = function() {
-            this.classList.toggle('completed');
-        };
-    };
-
-    document.querySelector('#newtask input').value = "";
-
+        // var tasks = document.querySelectorAll(".task");
+        // for(var i = 0;i < tasks; i++) {
+        //     tasks[i].onclick = function() {
+        //         this.classList.toggle('completed');
+        //     };
+        // };
+        document.querySelector('#newtask input').value = "";
     };
 };

@@ -122,6 +122,32 @@ body {
     text-decoration: line-through;
 }
 
-.hiddenShow {
-    display: none;
+.container_functions {
+    position: relative;
+    background: #fefefe;
+    margin: 15px;
+    border-radius: 5px;
+    padding: .5rem;
+}
+
+#qtdItems {
+    font-size: 1.2rem;
+    color: #fefefe;
+}
+
+.container_functions {
+    box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.418);
+    background: rgba(242, 242, 242, 0.765);
+    display: flex;
+    justify-content: space-around;
+}
+
+.info_list {
+    background: rgba(48, 46, 46, 0.63);
+    padding: .3rem;
+    border-radius: 5px;
+}
+
+.info_list {
+    font-family: monospace;
 }
