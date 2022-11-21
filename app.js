@@ -85,4 +85,12 @@ function deleteAllChlid() {
 
 
 // --- * --- configs_tasks --- * ---
-let configs_tasks = document.querySelector('#configs_tasks');
+function settingsBtn() {
+    let configs_tasks = document.querySelector('#show_Settings');
+    configs_tasks.style.marginTop = "0";
+};
+
+function hidden_settings() {
+    let configs_tasks = document.querySelector('#show_Settings');
+    configs_tasks.style.marginTop = "-100%";
+};

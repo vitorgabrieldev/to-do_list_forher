@@ -33,7 +33,7 @@
                     All
                     <i class='bx bxs-trash'></i>
                 </div>
-                <div class="content_config">
+                <div onclick="settingsBtn()" class="content_config">
                     <i class='bx bxs-cog'></i>
                 </div>
             </div>
@@ -42,9 +42,9 @@
         <div id="tasks"></div>
     </div>
 
-    <div class="configs_tasks">
+    <div id="show_Settings" class="configs_tasks">
         <div class="container_config">
-            <header>
+            <header onclick="hidden_settings()">
                 <i class='bx bx-x'></i>
             </header>
             <main class="content_container">
