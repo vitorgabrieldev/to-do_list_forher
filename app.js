@@ -66,6 +66,8 @@ function addTask() {
         // };
 
         document.querySelector('#newtask input').value = "";
+
+        document.querySelector('#addIten')
     };
 };
 
@@ -88,9 +90,38 @@ function deleteAllChlid() {
 function settingsBtn() {
     let configs_tasks = document.querySelector('#show_Settings');
     configs_tasks.style.marginTop = "0";
+    configs_tasks.style.display = "flex";
 };
 
 function hidden_settings() {
     let configs_tasks = document.querySelector('#show_Settings');
     configs_tasks.style.marginTop = "-100%";
+    configs_tasks.style.display = "none";
 };
+
+// --- * --- Function Options Settings --- * ---
+document.querySelector('#ch1').addEventListener('click', () => {
+    let body = document.querySelector("body");
+
+    let toggle = document.querySelector('#ch1');
+    
+    if(toggle.checked) {
+        body.style.background = "#888";
+    } else {
+        body.style.background = "rgb(34, 32, 32)";
+    };
+
+
+});
+
+document.querySelector('#ch2').addEventListener('click', () => {
+    console.log('Hello');
+});
+
+document.querySelector('#ch3').addEventListener('click', () => {
+    console.log('Hello');
+});
+
+document.querySelector('#ch4').addEventListener('click', () => {
+    console.log('Hello');
+});

@@ -243,7 +243,10 @@ body {
 
     display: flex;
 
-    margin-top: -100%;
+    /* --- * --- Hidden --- * --- */
+    margin-top: -200%;
+    display: none;
+
     transition: .3s;
 
     align-items: center;
