@@ -121,6 +121,7 @@ body {
 
 .completed {
     text-decoration: line-through;
+    background-color: rgba(10, 173, 10, 0.098);
 }
 
 .container_functions {

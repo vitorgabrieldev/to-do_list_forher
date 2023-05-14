@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
-    <title>To-do List</title>
+    <title>Metas para fazermos juntos</title>
 
     <!-- --- * --- Favicon --- * --- -->
-    <link rel="shortcut icon" href="./assents/media/image/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
     <!-- --- * --- Require Meta Tags --- * --- -->
     <meta charset="UTF-8">
@@ -17,30 +17,283 @@
     <!-- --- * --- Style Sheets --- * --- -->
     <link rel="stylesheet" href="./app.css">
 
+    <!-- Import Jquery -->
+    <script src="./import/jquery.js"></script>
+
 </head>
 <body>
     <!-- --- * --- Components --- * --- -->
     <div class="container">
         <div id="newtask">
-            <input id="addIten" spellcheck="false" maxlength="30" type="text" placeholder="Books, movies, anime...">
+            <input id="addIten" spellcheck="false" maxlength="30" type="text" placeholder="Metas, momentos, experiências...">
             <!-- --- * --- Event Call Button That Adds To List --- * --- -->
-            <button id="push">add</button>
+            <button id="push">Add</button>
             <div class="container_functions">
                 <div class="info_list">
                     <h1 id="qtdItems">0/50</h1>
                 </div>
-                <div onclick="deleteAllChlid()" class="content_functions">
+                <!-- <div onclick="deleteAllChlid()" class="content_functions">
                     All
                     <i class='bx bxs-trash'></i>
-                </div>
+                </div> -->
                 <div onclick="settingsBtn()" class="content_config">
                     <i class='bx bxs-cog'></i>
                 </div>
             </div>
+            <h1 id="msg"></h1>
         </div>
         <!-- --- * --- Container Tasks --- * --- -->
         <div id="tasks"></div>
     </div>
+
+    <script type="text/javascript">
+
+        // Config App
+        var token_child;
+        var Theme;
+
+        $.ajax({
+            url: 'php/requestSettings.php',
+
+            success: (data) => {
+                let info = JSON.parse(data);
+
+                // -- | -- Settings App -- | --
+                Theme = info.Theme;
+                token_child = info.Token;
+
+                // Call settings Theme
+                configTheme();
+                configDisplays();
+            },
+            error: (data) => {
+                window.onload();
+            },
+        });
+
+        function configDisplays() {
+            let countsItens = document.querySelector('#qtdItems');
+            countsItens.innerHTML = `${token_child}/50`;
+        };
+
+        window.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                if(token_child < 50) {
+                    addTask();
+                } else {
+                    document.querySelector('#newtask input').value = "";
+                    alert('Maximum items added');
+                };
+            };
+        });
+        document.querySelector("#push").addEventListener('click', () => {
+            if(token_child < 50) {
+                addTask();
+            } else {
+                document.querySelector('#newtask input').value = "";
+                alert('Maximum items added');
+            };
+        });
+
+
+        function addTask() {
+            if(document.querySelector('#newtask input').value.length === 0) {
+                alert("Please Enter a Task");
+            } else {
+                addMessage($("#newtask input").val());
+
+                token_child++;
+                updateTokenChild();
+
+
+                // --- * ---  update Counts Itens --- * ---
+                let countsItens = document.querySelector('#qtdItems');
+                countsItens.innerHTML = `${token_child}/50`;
+
+                // --- * --- delete Function --- * ---
+                var current_tasks = document.querySelectorAll(".delete");
+                document.querySelector('#tasks').style.display = "block";
+                for(var i = 0; i < current_tasks.length; i++) {
+                    current_tasks[i].onclick = function() {
+                        this.parentNode.remove();
+
+                        // --- * ---  update Counts Itens --- * ---
+                        token_child--;
+                        updateTokenChild();
+                        let countsItens = document.querySelector('#qtdItems');
+                        countsItens.innerHTML = `${token_child}/50`;
+
+                        if(token_child < 1) {
+                            document.querySelector('#tasks').style.display = "none";
+                        };
+                    };
+                };
+                document.querySelector('#newtask input').value = "";
+
+                document.querySelector('#addIten')
+            };
+        };
+
+        function addMessage(message) {
+            var maxId;
+            $.ajax({
+                url : 'php/requestMaxId.php',
+
+                success: function(id) {
+                    let num = JSON.parse(id);
+                    maxId = parseInt(num[0]) + 1;
+
+                    // console.log(`${maxId} - ${message}`);
+
+                    $.ajax({
+                        url : 'php/addMessage.php',
+                        type :  'POST',
+                        data : {data : message},
+
+                        success : function(data) {
+                            renderMessages();
+                        },
+                        error : function(data) {
+                            console.log(data);   
+                        },
+                    });
+                },
+            });
+        };
+
+        renderMessages();
+
+        function renderMessages() {
+            document.querySelector('#tasks').innerHTML = "";
+            $.ajax({
+                url : 'php/renderMessages.php',
+                
+                success: (datas) => {
+                    let list = JSON.parse(datas);
+
+                    if (list.length >= 1) {
+                        document.querySelector('#tasks').style.display = "block";
+                    } else {
+                        document.querySelector('#tasks').style.display = "none";
+                    };
+                    list.forEach(element => {
+                        let tokenId = element.Id;
+                        document.querySelector('#tasks').innerHTML += `
+                            <div id="${tokenId}" class="task">
+                                <span class="tokenAcess${tokenId}" id="taskname">
+                                    ${element.Message}
+                                </span>
+                                <button id="${tokenId}" class="delete">
+                                    <i class='bx bxs-trash'></i>
+                                </button>
+                            </div> 
+                        `;
+                        // if (element.State == 0) {
+                        //    $(`#${tokenId}`).addClass('completed');
+                        // };
+                        if(element.State == 1) {
+                            $(`#${tokenId}`).addClass("completed");
+                           
+                        };
+                        tokenId ++;
+                    });
+
+                    var tasks = document.querySelectorAll(".task");
+                    for(var i = 0;i < tasks.length; i++) {
+                        tasks[i].onclick = function() {
+                            this.classList.toggle('completed');
+
+                            $.ajax({
+                                url : 'php/completed.php',
+                                type : 'POST',
+                                data : {data : this.id},
+
+                                success: function (response) {
+                                    // renderMessages();
+                                    // console.log(response);
+                                },
+                                error: function (response) {
+                                    console.log(response);  
+                                },
+                            });
+
+                        };
+                    };
+
+                    var current_tasks = document.querySelectorAll(".delete");
+                    for(var i = 0; i < current_tasks.length; i++) {
+                        current_tasks[i].onclick = function() {
+                        
+                            // var currectSpan = document.querySelector(`.tokenAcess${i}`);
+                            // console.log(currectSpan);     
+                            
+                            // console.log(this.id);
+
+                            $.ajax({
+                                url : 'php/removeList.php',
+                                type : 'POST',
+                                data : {data : this.id},
+
+                                success: function (response) {
+                                    renderMessages();
+                                },
+
+                                error: function (response) {
+                                    
+                                },
+                            });
+                        
+                            this.parentNode.remove();
+
+                            token_child --;
+
+                            updateTokenChild();
+
+                            if (token_child == 0) {
+                                document.querySelector('#tasks').style.display = "none";
+                            };
+
+                        };
+                    };
+                },
+            });            
+        };
+
+        // function deleteAllChlid() {
+        //     var current_tasks = document.querySelectorAll(".task");
+        //     current_tasks.forEach(element => {
+        //         element.parentElement.removeChild(element);
+        //     });
+
+        //     // --- * ---  update Counts Itens --- * ---
+        //     token_child = 0;
+        //     let countsItens = document.querySelector('#qtdItems');
+        //     countsItens.innerHTML = `${token_child}/50`;
+
+        //     document.querySelector('#tasks').style.display = "none";
+
+        //     updateTokenChild();
+        // };
+
+        function updateTokenChild() {
+             let token = token_child;
+            $.ajax({
+                url : 'php/updateToken.php',
+                type : 'POST',
+                data : {data: token},
+
+                success: function() {
+                    
+                },
+                error: function() {
+                    
+                },
+            });
+
+            configDisplays();
+        };
+
+    </script>
 
     <div id="show_Settings" class="configs_tasks">
         <div class="container_config">
@@ -55,12 +308,7 @@
                 <section class="settings_main">
                     <div class="options">
                         <label for="theme">Theme</label>
-                        <div class="content">
-                            <label class="checkBox">
-                            <input id="ch1" type="checkbox">
-                            <div class="transition"></div>
-                            </label>
-                        </div>
+                        <div class="content content2"></div>
                     </div>
                     <div class="options">
                         <label for="bold">Bold text</label>
@@ -94,8 +342,92 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+
+        // --- * --- configs_tasks --- * ---
+        function settingsBtn() {
+            let configs_tasks = document.querySelector('#show_Settings');
+            configs_tasks.style.marginTop = "0";
+            configs_tasks.style.display = "flex";
+        };
+
+        function hidden_settings() {
+            let configs_tasks = document.querySelector('#show_Settings');
+            configs_tasks.style.marginTop = "-100%";
+            configs_tasks.style.display = "none";
+        };
+
+        function configTheme() {
+            if(Theme == 0) {
+                document.querySelector('body').style.background = "rgb(34, 32, 32)";
+                $('.content').html(`
+                    <label class='checkBox'>
+                        <input id="ch1" type='checkbox'>
+                         <div class="transition"></div>
+                    </label>
+                `);
+            } else {
+                document.querySelector('body').style.background = "#888";
+                $('.content2').html(`
+                    <label class='checkBox'>
+                        <input id="ch1" checked type='checkbox'>
+                         <div class="transition"></div>
+                    </label>
+                `);
+            };
+            declareTheme();
+        };
+
+        // --- * --- Function Options Settings --- * ---
+        function declareTheme() {
+            document.querySelector('#ch1').addEventListener('click', () => {
+
+            let body = document.querySelector("body");
+
+            let toggle = document.querySelector('#ch1');
+
+            if(toggle.checked) {
+                body.style.background = "#888";
+                $.ajax({
+                    url : 'php/updateTheme.php',
+                    type : 'POST',
+                    data : {data: 1},
+
+                    success: function(data) {
+                    },
+
+                    error: function() {
+                        console.log(data)
+                    }
+
+                });
+
+                Theme = 1;
+            } else {
+                body.style.background = "rgb(34, 32, 32)";
+
+                $.ajax({
+                    url : 'php/updateTheme.php',
+                    type : 'POST',
+                    data : {data: 0},
+
+                    success: function(data) {
+                    },
+
+                    error: function() {
+                        console.log(data)
+                    }
+
+                });
+
+                Theme = 0;
+            };
+            });
+        };
+    </script>
+
     <!-- --- * --- Script --- * --- -->
-    <script src="./app.js"></script>
+    <!-- <script src="./app.js"></script> -->
 
 </body>
 </html>
